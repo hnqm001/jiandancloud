@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+
+{% block title %}简单云 - 图片查看{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>图片展示</h1>
+</div>
+<div class="container">
+{% if filetype | lower == 'mp4' %}
+	<video src="{{ url_for('cloud.get_image',filename=filename) }}" type="video/mp4" controls width="500px" height="380px" >
+		抱歉，你的浏览器不支持播放
+	</video>
+{% else %}
+    <img src="{{ url_for('cloud.get_image',filename=filename) }}" alt="{{ filename }}" width="1024" />  
+{% endif %}
+</div>
+{% endblock %}
+

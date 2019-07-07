@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}简单云 - 文件上传{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dropzone.min.css') }}" type="text/css">
+{{ dropzone.style('border: 2px dashed #0087F7; margin: 20px 0; min-height: 400px;') }}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid col-sm-offset-1">
+<div class="page-header">
+	<h1>文件上传
+		<small><font size=2><em>请点击下框选择需上传的文件，最大上传文件大小200M</em></font></small>
+	</h1>
+</div>
+<div class="row">
+	<div class="col-md-10">
+		{{ dropzone.create(action='cloud.upload') }}
+		{{ dropzone.config() }}
+		<a class="btn btn-primary pull-right" href="{{ url_for('cloud.disk',username=current_user.username) }}">完成上传</a>
+	</div>
+</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+	{{ super() }}
+    <script src="{{ url_for('static', filename='js/dropzone.min.js') }}"></script>
+    {{ dropzone.config() }}  
+{% endblock %}

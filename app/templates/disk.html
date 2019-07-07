@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+
+{% block title %}简单云 - 云存储{% endblock %}
+
+{% block page_content %}
+<div class="container">
+    <h2 class="sub-header">{{ user.username }}的云存储空间</h2>
+    <ul class="nav nav-tabs">
+        <li{% if not share_file %} class="active"{% endif %}><a href="{{ url_for('cloud.unshare') }}">个人</a>
+        </li>
+        <li{% if share_file %} class="active"{% endif %}><a href="{{ url_for('cloud.fshare') }}">共享</a>
+        </li>
+    </ul>
+    <div class="row clearfix">
+        <div class="col-md-9 column table-responsive">
+            <table class="table table-condensed table-hover">
+                <thead>
+                    <tr>
+                        <th>文件名</th>
+                        <th>文件大小</th>
+                        <th>类型</th>
+                        <th>上传/修改时间</th>
+                        <th>拥有人</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in files %}
+                    <tr>
+                        <td><span class="glyphicon glyphicon-file"></span>{{ file.filename | truncate(45) }}</td>
+                        <td>{{ file.filesize | filesizeformat }}</td>
+                        <td>{{ file.filetype | upper }}</td>
+                        <td>{{ moment(file.timestamp).format('YYYY-M-D hh:mm a') }}</td>
+                        <td>{{ file.uploader.username }}</td>
+                        <td>
+                            {% if file.uploader_id == user.id %}
+                            {% if file.fileshare %}
+                            <a class="label label-success" href="{{ url_for('cloud.share_disable', id=file.id) }}">共享</a>
+                            {% else %}
+                            <a class="label label-default" href="{{ url_for('cloud.share_enable', id=file.id) }}">共享</a>
+                            {% endif %}
+                            {% endif %} 
+                            {% if file.filetype in ('txt','pdf') %}
+                            <a href="{{ url_for('cloud.get_image',filename=file.filename) }}"> <span class="label label-info">打开</span></a>
+                            {% endif %}
+                            {% if file.filetype | lower in ('png','jpg','gif','jpge','ico','bmp','mp4') %}
+                            <a href="{{ url_for('cloud.show',filename=file.filename) }}"> <span class="label label-info">查看</span></a>
+                            {% endif %}
+                            <a href="{{ url_for('cloud.download',filename=file.filename) }}"><span class="label label-primary">下载</span></a>
+                            {% if current_user == file.uploader or current_user.is_administrator() %}
+                            <a href="{{ url_for('cloud.del_file',id=file.id) }}"><span class="label label-danger">删除</span></a>
+                            {% endif %}
+                        </td>                   
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="pagination">
+                {{ macros.pagination_widget(pagination, endpoint,username = user.username) }}
+            </div>
+        </div>
+        <div class="col-md-3 column">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    {{ wtf.quick_form(form,button_map={"submit":"success btn-block"}) }}
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body" style="text-align:center;">
+                    <a class="btn btn-primary btn-lg" href="{{ url_for('cloud.upload') }}"><spen class="glyphicon glyphicon-cloud-upload">文件上传</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

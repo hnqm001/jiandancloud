@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html{% block html_attribs %}{% endblock html_attribs %}>
+{%- block html %}
+<title>{% block title %}简单云{% endblock %}</title>
+<head>
+{% block head %}
+    {%- block metas %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {%- endblock metas %}
+
+    {% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css.map') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    {% endblock styles %}
+{% endblock head %}
+</head>
+
+<body{% block body_attribs %}{% endblock body_attribs %}>
+{% block body -%}
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">简单云</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="{{ url_for('main.index') }}">主页</a></li>
+                {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('main.user', username=current_user.username) }}">个人资料</a></li>
+                {% endif %}
+                {% if current_user.can(Permission.CLOUD) %}
+                <li><a href="{{ url_for('cloud.disk',
+                    username=current_user.username) }}">云空间</a></li>
+                {% endif %}
+                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">工具 <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">待加载</a></li>
+                        <li><a href="#">待加载</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if current_user.can(Permission.MODERATE) %}
+                <li><a href="{{ url_for('main.moderate') }}">审核评论</a></li>
+                {% endif %}
+                {% if current_user.can(Permission.ADMIN) %}
+                <li><a href="{{ url_for('cloud.admin',
+                    username=current_user.username) }}">用户管理</a></li>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="{{ url_for('main.get_avatar', filename=current_user.avatar_s) }}">
+                        帐户 <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url_for('auth.change_password') }}">修改密码</a></li>
+                        <li><a href="{{ url_for('auth.change_email_request') }}">修改邮箱</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ url_for('auth.logout') }}">注销</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li><a href="{{ url_for('auth.login') }}">登录</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock navbar %}
+
+{% block content %}
+<div class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+
+    {% block page_content %}{% endblock %}
+</div>
+{% endblock content %}
+
+{% block footer %}
+<footer class="container">
+    <p style="text-align:center;">
+        <small>&copy; 2019
+            <a href="http://hnqm001.imwork.net" title="一个flask web项目">JiandanCloud·简单云</a> -
+            <a href="https://github.com/hnqm001" title="我的GitHub仓库">GitHub</a> -
+            <a href=mailto:ztxc007@139.com title="联系我">联系我</a>
+        </small>
+    </p>
+</footer>
+{% endblock footer %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/jquery-3.4.1.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+{{ moment.include_moment(local_js=url_for('static',filename='js/moment-with-locales.js')) }}
+{{ moment.locale("zh-cn") }}
+{% endblock scripts %}
+
+{%- endblock body %}
+</body>
+{%- endblock html %}
+</html>
