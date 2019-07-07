@@ -39,16 +39,7 @@ def initdb(drop, password):
                  name='管理员',
                  location='中国',
                  about_me='我是简单云管理员')
-
-    u = User(email='ztxc001@126.com',
-             username='ztxc001',
-             password='123456',
-             confirmed=True,
-             name='测试员',
-             location='中国',
-             about_me='')
     db.session.add(admin)
-    db.session.add(u)
     db.session.commit()
     User.add_self_follows()
     click.echo('添加管理员完成。')
