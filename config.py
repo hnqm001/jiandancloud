@@ -6,8 +6,10 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 WIN = sys.platform.startswith('win')
 if WIN:
     prefix = 'sqlite:///'
+    AVATARS_SAVE_PATH = os.path.join(basedir, 'app\\static\\images\\avatars')
 else:
     prefix = 'sqlite:////'
+    AVATARS_SAVE_PATH = os.path.join(basedir, 'app/static/images/avatars')
 
 
 class Config:
@@ -48,7 +50,7 @@ class Config:
 
     # 头像配置
     AVATARS_SERVE_LOCAL = True
-    AVATARS_SAVE_PATH = os.path.join(basedir, 'app\\static\\images\\avatars')
+
     AVATARS_SIZE_TUPLE = (16, 30, 200)
     AVATARS_IDENTICON_COLS = 7
     AVATARS_IDENTICON_ROWS = 7
