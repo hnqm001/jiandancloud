@@ -1,11 +1,22 @@
-Flasky
+#JandanCloud
 ======
+JandanCloud·简单云
+这是一个flask web项目
 
-This repository contains the source code examples for the second edition of my O'Reilly book [Flask Web Development](http://www.flaskbook.com).
-
-The commits and tags in this repository were carefully created to match the sequence in which concepts are presented in the book. Please read the section titled "How to Work with the Example Code" in the book's preface for instructions.
-
-For Readers of the First Edition of the Book
+##安装
+```
+$ git clone https://github.com/hnqm001/jiandancloud.git
+$ cd jiandancloud
+$ pipenv install --dev
+$ pipenv shell
+$ flask initdb
+$ flask forge
+$ flask run
+* Running on http://127.0.0.1:5000/
+```
 --------------------------------------------
-
-The code examples for the first edition of the book were moved to a different repository: [https://github.com/miguelgrinberg/flasky-first-edition](https://github.com/miguelgrinberg/flasky-first-edition).
+本项目源码内容借鉴《Flask Web开发》与《Flask Web开发实战》二书
+如果执行`pipenv install`命令安装依赖耗时太长，你可以考虑使用国内的PyPI镜像源，比如：
+```
+$ pipenv install --dev --pypi-mirror https://mirrors.aliyun.com/pypi/simple
+```
