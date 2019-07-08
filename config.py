@@ -1,28 +1,31 @@
 import os
 import sys
+from dotenv import load_dotenv, find_dotenv
+
 basedir = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(find_dotenv())
 
 # SQLite URI 判断兼容系统
 WIN = sys.platform.startswith('win')
 if WIN:
     prefix = 'sqlite:///'
-    AVATARS_SAVE_PATH = os.path.join(basedir, 'app\\static\\images\\avatars')
 else:
     prefix = 'sqlite:////'
-    AVATARS_SAVE_PATH = os.path.join(basedir, 'app/static/images/avatars')
 
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
-    MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.139.com')
+    MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.163.com')
     MAIL_PORT = int(os.environ.get('MAIL_PORT', '465'))
     MAIL_USE_SSL = True
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    JIANDANCLOUD_MAIL_SUBJECT_PREFIX = '[JIANDANCLOUD]'
-    JIANDANCLOUD_MAIL_SENDER = 'JiandanCloud Admin <ztxc007@139.com>'
+
     # 管理员邮箱地址
     JIANDANCLOUD_ADMIN = os.environ.get('JIANDANCLOUD_ADMIN')
+    JIANDANCLOUD_MAIL_SUBJECT_PREFIX = '[JIANDANCLOUD]'
+    JIANDANCLOUD_MAIL_SENDER = 'JiandanCloud Admin <%s>' % JIANDANCLOUD_ADMIN
+
     # 如果设置成 True (默认情况)，Flask-SQLAlchemy 将会追踪对象的修改并且发送信号
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # 可以用于显式地禁用或者启用查询记录
@@ -50,7 +53,10 @@ class Config:
 
     # 头像配置
     AVATARS_SERVE_LOCAL = True
-
+    # win系统
+    AVATARS_SAVE_PATH = os.path.join(basedir, 'app\\static\\images\\avatars')
+    # linux系统
+    #AVATARS_SAVE_PATH = os.path.join(basedir, 'app/static/images/avatars')
     AVATARS_SIZE_TUPLE = (16, 30, 200)
     AVATARS_IDENTICON_COLS = 7
     AVATARS_IDENTICON_ROWS = 7
