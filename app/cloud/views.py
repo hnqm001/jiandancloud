@@ -199,3 +199,75 @@ def getFileList():
                 db.session.add(fileinfo)
                 db.session.commit()
     return redirect(url_for('.disk', username=current_user.username))
+
+
+@cloud.route("/huitu")
+def huitu():
+    import matplotlib
+    matplotlib.use('Agg')  # 不出现画图的框
+
+    import matplotlib.pyplot as plt
+    from io import BytesIO
+    import base64
+
+    # 用来正常显示中文标签
+    plt.rcParams['font.sans-serif'] = ['SimHei']
+    # 用来正常显示负号
+    plt.rcParams['axes.unicode_minus'] = False
+
+    # 这段正常画图
+    # 图形输入值
+    input_values = ['1月', '2月', '3月', '4月', '5月']
+    # 图形输出值
+    squares = [2, 4, 9, 16, 25]
+
+    # plot根据列表绘制出有意义的图形，linewidth是图形线宽，可省略
+    plt.bar(input_values, squares, linewidth=5)
+    # 设置图标标题
+    plt.title("完成指数", fontsize=24)
+    # 设置坐标轴标签
+    plt.xlabel("月份", fontsize=14)
+    plt.ylabel("完成值", fontsize=14)
+    # 设置刻度标记的大小
+    plt.tick_params(axis='both', labelsize=14)
+    # -----------
+
+    # 转成图片的步骤
+    sio = BytesIO()
+    plt.savefig(sio, format='png')
+    data = base64.encodebytes(sio.getvalue()).decode()
+    # 记得关闭，不然画出来的图是重复的
+    plt.close()
+
+    return render_template('show.html', data=data)
+
+
+@cloud.route("/huitu2")
+def huitu2():
+    import matplotlib
+    matplotlib.use('Agg')  # 不出现画图的框
+
+    import matplotlib.pyplot as plt
+    from io import BytesIO
+    import base64
+    from PIL import Image
+
+    # 用来正常显示中文标签
+    plt.rcParams['font.sans-serif'] = ['SimHei']
+    # 用来正常显示负号
+    plt.rcParams['axes.unicode_minus'] = False
+
+    # 这段正常画图
+    im = Image.open('E:\\IMG_20170412_115132.jpg')
+    plt.axis("off")
+    plt.imshow(im)
+    # -----------
+
+    # 转成图片的步骤
+    sio = BytesIO()
+    plt.savefig(sio, format='png')
+    data = base64.encodebytes(sio.getvalue()).decode()
+    # 记得关闭，不然画出来的图是重复的
+    plt.close()
+
+    return render_template('show.html', data=data)

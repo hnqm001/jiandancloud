@@ -22,6 +22,7 @@ bleach = "*"
 python-dotenv = "*"
 flask-dropzone = "*"
 flask-avatars = "*"
+matplotlib = "*"
 
 [requires]
 python_version = "3.7"
